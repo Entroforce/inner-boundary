@@ -2,7 +2,7 @@ import numpy as np
 import astropy.coordinates as astrocoords
 import astropy.units as u
 import astropy.constants as const
-import pfsspy
+import fieldline
 from data_types import Grid, OutputLike
 import itertools
 from matplotlib import pyplot as plt
@@ -12,7 +12,6 @@ import argparse
 import h5py
 from scipy.interpolate import *
 from streamtracer import StreamTracer
-import sunpy
 import time
 
 NLAT = 90
@@ -128,7 +127,6 @@ def vector_grid(pot3d_output, grid):
 
     # The indexing order on the last index is (phi, s, r)
     vectors = pot3d_output.bg.copy()
-    print("vectors shape", vectors.shape)
 
     # Correct s direction for coordinate system distortion
     sqrtsg = grid._sqrtsg_correction
@@ -211,8 +209,8 @@ def trace(seeds, output, step_size=1, max_steps=-1):
             (np.abs(x[:, 1]) < 1), :] for x in xs]
 
     xs = [np.stack(strum2cart(x[:, 2], x[:, 1], x[:, 0]), axis=-1) for x in xs]
-    flines = [pfsspy.fieldline.FieldLine(x[:, 0], x[:, 1], x[:, 2], output) for x in xs]
-    return pfsspy.fieldline.FieldLines(flines)
+    flines = [fieldline.FieldLine(x[:, 0], x[:, 1], x[:, 2], output) for x in xs]
+    return fieldline.FieldLines(flines)
 
 coeffs_swpc = {
     "v0": 285,
@@ -408,7 +406,6 @@ def trace_map_pot3d(input_prefix, lon, colat, model="pfss", draw=False):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Tracing & WSA')
     parser.add_argument('input_prefix', help='')
-    parser.add_argument('--slow-tracer', action='store_true')
     args = parser.parse_args()
 
     colat = np.linspace(np.pi - (np.pi / 2 / NLAT), 0 + (np.pi / 2 / NLAT), NLAT, endpoint=True)

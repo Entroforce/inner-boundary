@@ -95,7 +95,7 @@ t_bnd = np.ndarray(v_bnd.shape, np.float64)
 pressure_const = 2.459e10 * (4.5e-3 ** 2) + 1.293e-4 * dfast * tfast
 nv_const = dfast * vfast
 
-print(2.459e10 * (4.5e-3 ** 2), 1.293e-4 * 400 * 1.5e6)
+#print(2.459e10 * (4.5e-3 ** 2), 1.293e-4 * 400 * 1.5e6)
 
 for x in range(d_bnd.shape[0]):
   colatitude = (x + 0.5) * pi / d_bnd.shape[0]
