@@ -14,7 +14,6 @@ import argparse
 
 parser = argparse.ArgumentParser()
 
-
 parser.add_argument('fits_b', type=str,
                     help='fits file with radial B on 21.5Rsun (nonpolar)')
 parser.add_argument('fits_bp', type=str,
@@ -24,18 +23,6 @@ parser.add_argument('fits_v', type=str,
 parser.add_argument('outfile', type=str,
                     help='resulting bnd.nc file')
 
-parser.add_argument('--date', type=str,
-                    help='date (YYYY-MM-DD)',
-                    default='')
-
-parser.add_argument('--gong', type=str,
-                    help='GONG fits file (optional)',
-                    action='store',
-                    default='')
-
-parser.add_argument('--stop', action='store_true')
-
-parser.add_argument('--cr', action='store_true')
 
 args = parser.parse_args()
 
@@ -68,23 +55,17 @@ v_wsa = np.array(fits_v[0].data)
 v_wsa = fix_nans(v_wsa)
 b_wsa = np.flip(b_wsa, axis=[0])
 
-
-# values from ENLIL setting (found in bnd.nc)
-vfast = 750.
-dfast = 400.
 xalpha = 0.05
 dscale = 2.075 # (np+na+ne)/np
-bfactor = 4.5e-3 / np.average(b_wsa)
 
+# CR2066 values
+vfast = 750.
+dfast = 400.
 tfast = 1.5e6 # K
 
-### VELOCITY
+# VELOCITY
 v_wsa *=  1000
 v_bnd = v_wsa
-
-### DENSITY
-
-## density transformed
 
 d_bnd = np.ndarray(v_bnd.shape, np.float64)
 b1_bnd = np.ndarray(v_bnd.shape, np.float64)
@@ -92,8 +73,8 @@ b3_bnd = np.ndarray(v_bnd.shape, np.float64)
 bp_bnd = np.ndarray(v_bnd.shape, np.float64)
 t_bnd = np.ndarray(v_bnd.shape, np.float64)
 
-pressure_const = 2.459e10 * (4.5e-3 ** 2) + 1.293e-4 * dfast * tfast
-nv_const = dfast * vfast
+# pressure_const = 2.459e10 * (4.5e-3 ** 2) + 1.293e-4 * dfast * tfast
+# nv_const = dfast * vfast
 
 #print(2.459e10 * (4.5e-3 ** 2), 1.293e-4 * 400 * 1.5e6)
 
