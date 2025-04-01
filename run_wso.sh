@@ -9,11 +9,12 @@ F="${1%.*}"
 
 # Photosphere Br from WSO
 python3 br-from-wso.py 1 ${F}.fits &&
-    
+
 # Run PFSS
 python3 fits-to-pot3d.py $F.fits $F.h5 &&
 sed "s~FILENAME~$F~g" pot3d.pfss.dat > pot3d.dat &&
 ../POT3D/bin/pot3d &&
+python3 pot3d-to-fits.py ${F}_br_pfss.h5 ${F}_br_pfss.fits &&
 
 # PFCS run
 python3 fits-to-pot3d.py ${F}_br_pfss.fits ${F}_br_pfss_2d.h5 &&
